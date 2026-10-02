@@ -30,20 +30,27 @@ const bySlug = Object.fromEntries(articles.map((a) => [a.slug, a]));
 function rinseqBox(root, size = "large") {
   const r = config.rinseq;
   const beta = r.phase === "beta";
-  const head = beta ? `RINSEQ β版 ${r.betaUntil}まで無料(順次ご案内中)` : "RINSEQ 最初の7日間は無料";
+  const badge = beta ? `β版 ${r.betaUntil}まで無料` : "最初の7日間無料";
   const btn = beta ? "無料でβ版を試す" : "7日間無料で試す";
+  const prLine = `<p class="feat-pr">PR:運営者が開発しているソフトです(ランキングの対象外)</p>`;
+  const head = `<p class="feat-h">今回紹介したいソフト</p>`;
   if (size === "small") {
-    return `<div class="box rinseq-mini"><div class="box-h">RINSEQ ${beta ? "β版" : ""}</div>
-<p class="sm">${beta ? `${r.betaUntil}まで編集機能が無料` : "最初の7日間無料"}<br>運営者が作っているソフトです</p>
-<a class="btn2 btn-s" href="${r.url}" target="_blank" rel="noopener">${btn}</a></div>`;
+    return `<aside class="feat feat-s">${head}<div class="feat-b">
+<p class="feat-name">RINSEQ(リンセック)</p><span class="feat-badge">${badge}</span>
+<p><a class="btn2 btn-s" href="${r.url}" target="_blank" rel="noopener">${btn}</a></p></div>${prLine}</aside>`;
   }
-  return `<aside class="rinseq-box">
-<p class="own-label">運営者が作っているソフトです</p>
-<p class="rinseq-h">${head}</p>
-<p>無音・「えー」などの自動カットと、文字起こしからのテロップで、YouTube動画を早く仕上げる編集ソフトです。${beta ? "β版の間は、上位プラン(プロクリエイター)の編集機能が無料です(AIの機能はRINSEQコインを使います。登録時に10コイン付き)。β版の方は事前申し込みで、正式版の初月が3,000円→2,000円になります。" : "正式版は最初の7日間が無料です(月額1,500円〜)。"}</p>
-<p><a class="btn2" href="${r.url}" target="_blank" rel="noopener">${btn}</a>
-<a class="more" href="${root}articles/first-video-5steps.html">はじめての方は使い方入門へ ›</a></p>
-</aside>`;
+  const tutorial = bySlug["first-video-5steps"] ? `<a class="more" href="${root}articles/first-video-5steps.html">はじめての方は使い方入門へ ›</a>` : "";
+  return `<aside class="feat">${head}<div class="feat-b">
+<div class="feat-top"><img src="${root}assets/img/rinseq.jpg" alt="RINSEQ" width="320" height="180" loading="lazy">
+<div><p class="feat-name">RINSEQ(リンセック)</p><span class="feat-badge">${badge}</span><p class="sm">YouTube向けの動画編集ソフト(Mac・Windows)</p></div></div>
+<div class="feat-sec"><p class="feat-sh">なぜ紹介するの?</p>
+<p>動画編集を始めた頃、「編集が終わらない」「作った動画をどうお金にすればいいかわからない」の2つで何度も止まりました。編集から「稼ぐ」までを1つのソフトでできたら…と思って、自分で作ったのがRINSEQです。あの頃の自分と同じところで止まっている人に、まず無料で試してほしくて紹介しています。</p></div>
+<div class="feat-sec"><p class="feat-sh">編集がラクになる</p><ul>
+<li>無音・「えー」などを自動で見つけてカット</li><li>しゃべった言葉を文字にして、そのままテロップに</li></ul></div>
+<div class="feat-sec"><p class="feat-sh">作った動画で「稼ぐ」しくみが、アプリの中にある</p><ul>
+<li><b>企業案件・編集の仕事に応募できる</b>(正式版11月〜・プラス会員 月980円)</li>
+<li><b>RINSEQを紹介すると、紹介した人が使い続けてくれる間、最大6か月間、毎月報酬が入ります。</b><span class="sm">(はじめに1人1,000〜2,000円、その後は毎月100円。正式版11月〜)</span></li></ul></div>
+<p><a class="btn2" href="${r.url}" target="_blank" rel="noopener">${btn}</a>${tutorial}</p></div>${prLine}</aside>`;
 }
 
 function header(root) {
@@ -147,15 +154,16 @@ function articlePage(a) {
 <span class="cat">${catName(m.category)}</span>
 <h1>${esc(m.title)}</h1>
 <p class="meta">公開 ${fmtDate(m.date)}${m.updated ? ` ・ 更新 ${fmtDate(m.updated)}` : ""}${m.readMin ? ` ・ 読む時間 約${m.readMin}分` : ""}</p>
+${rinseqBox(root)}
 ${toc ? `<nav class="toc"><p class="toc-h">目次</p><ol>${toc}</ol></nav>` : ""}
 ${a.body.replaceAll("{{RINSEQ_BOX}}", rinseqBox(root)).replaceAll("{{ROOT}}", root)}
 <div class="author-box"><div class="av" aria-hidden="true"></div><div><b>この記事を書いた人:${esc(config.author)}</b>
 <p class="sm">本業は動画と関係ない仕事。動画編集の初心者からYouTube編集ソフト「RINSEQ」を作っています。<a href="${root}about.html">運営者情報 ›</a></p></div></div>
 ${related.length ? `<section class="related"><h2 class="h-line">あわせて読みたい</h2><ul class="lk">${related.map((r) => `<li><a href="${root}articles/${r.slug}.html">${esc(r.meta.title)}</a></li>`).join("")}</ul></section>` : ""}
 </article>`;
-  const side = `${sideProfile(root, false)}
+  const side = `${rinseqBox(root, "small")}
+${sideProfile(root, false)}
 ${m.top ? `<div class="box"><div class="box-h">この記事の1位</div><p><b>${esc(m.top.name)}</b><br><span class="sm">${esc(m.top.note)}</span></p><a class="btn btn-s" href="${m.top.url}" target="_blank" rel="noopener sponsored">公式サイトを見る(PR)</a></div>` : ""}
-${rinseqBox(root, "small")}
 ${sidePopular(root)}
 ${sideCategories(root)}
 ${toc ? `<div class="box sticky"><div class="box-h">目次</div><ol class="lk">${toc}</ol></div>` : ""}`;
@@ -179,13 +187,13 @@ function indexPage() {
         .join("")}</ul><p class="more-r"><a href="category/${c.id}.html">もっと見る ›</a></p>`;
     })
     .join("");
-  const main = `<section class="intro">${intro}</section>
-${rinseqBox(root)}
+  const main = `${rinseqBox(root)}
+<section class="intro">${intro}</section>
 <section><h2 class="h-bar">4つのテーマ</h2><div class="themes">${themes}</div></section>
 <section><h2 class="h-bar">新着記事</h2>${articles.slice(0, 6).map((a) => articleListItem(a, root)).join("")}</section>
 <section><h2 class="h-bar">カテゴリーごとの記事</h2>${perCat}</section>`;
-  const side = `${sideProfile(root)}
-${rinseqBox(root, "small")}
+  const side = `${rinseqBox(root, "small")}
+${sideProfile(root)}
 ${sidePopular(root)}
 ${sideCategories(root)}
 <div class="box"><div class="box-h">広告について</div><p class="sm">当サイトはアフィリエイト広告を利用しています。ランキングの採点基準は記事の中で公開しています。<a href="ads.html">くわしく ›</a></p></div>`;
@@ -206,7 +214,7 @@ function categoryPage(c) {
   const main = `<nav class="crumb"><a href="${root}index.html">ホーム</a> › <span>${c.name}</span></nav>
 <h1 class="page-h">${c.name}</h1><p>${c.lead}</p>
 ${list.length ? list.map((a) => articleListItem(a, root)).join("") : `<p class="empty">このカテゴリーの記事は準備中です。</p>`}`;
-  const side = `${sideProfile(root, false)}${rinseqBox(root, "small")}${sidePopular(root)}${sideCategories(root)}`;
+  const side = `${rinseqBox(root, "small")}${sideProfile(root, false)}${sidePopular(root)}${sideCategories(root)}`;
   return page({ root, title: c.name, description: `${c.name}:${c.lead}`, prText: "※当サイトはアフィリエイト広告(PR)を利用しています", main, side, canonical: `category/${c.id}.html` });
 }
 

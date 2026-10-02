@@ -6,7 +6,7 @@ export default {
     "動画編集も「動画で稼ぐ」もゼロから始めた運営者が、編集ソフトの選び方・使い方・YouTubeで稼ぐ方法を、初心者の言葉でまとめるサイトです。",
   // 公開するアドレス(独自ドメインにしたらここを変える)
   baseUrl: "https://douga-kasegu-lab.github.io",
-  author: "(運営者名)",
+  author: "RINSEQ",
 
   rinseq: {
     // "beta" の間はβ版無料の案内、"release" にすると正式版(7日間無料)の案内に切り替わる
